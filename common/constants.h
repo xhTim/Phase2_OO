@@ -32,6 +32,17 @@ const double Lumi_Uncer = 1.5;    // 1.5% uncertainty on luminosity
 const int  mCentralityCut = 180;
 const int  mNtrkofflineCut = 2;
 
+const int mPVFilterIdx			= 3;
+
+const int    mHFVetoOpt			= 0;
+const double mHFVetoPlus		= 9.2;
+const double mHFVetoMinus		= 8.6;
+const double mHFVetoPlus_tight	= 8.0;
+const double mHFVetoMinus_tight	= 8.0;
+const double mHFVetoPlus_loose	= 10.0;
+const double mHFVetoMinus_loose	= 10.0;
+std::vector<TString> mHFVetoOptName = {"" , "_HFTight", "_HFLoose"};
+
 const int    nDirs = 2;        // 0: ZDC-Plus; 1: ZDC-Minus;
 const TString  mDir[nDirs]        = {"Plus", "Minus"};
 const double mHFsumETCut[nDirs] = {12,    12    };
@@ -66,25 +77,15 @@ const double mNeuZDCHi[nDirs][nNeus] =
 const double mTwoNeuZDCLow[nDirs] = {11e3, 17.5e3};
 const double mTwoNeuZDCHi[nDirs]  = {17e3, 27.0e3};
 
-//const int    nRapBins = 16;
-//const double mRapLow[nRapBins] = {-2.4, -2.3, -2.2, -2.1, -2.0, -1.9, -1.8, -1.7, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3};
-//const double mRapHi[nRapBins]  = {-2.3, -2.2, -2.1, -2.0, -1.9, -1.8, -1.7, -1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4};
-
-const int    nRapBins          = 12;
-const double mRapLow[nRapBins] = {-2.4, -2.2, -2.1, -2.0, -1.9, -1.8, 1.6, 1.8, 1.9, 2.0, 2.1, 2.2};
-const double mRapHi[nRapBins]  = {-2.2, -2.1, -2.0, -1.9, -1.8, -1.6, 1.8, 1.9, 2.0, 2.1, 2.2, 2.4};
-
 // const int    nDiffRapBins = 6;
 // const double mDiffRapLow[nDiffRapBins] = {-2.4, -2.1, -1.9, 1.6, 1.9, 2.1};
 // const double mDiffRapHi[nDiffRapBins]  = {-2.1, -1.9, -1.6, 1.9, 2.1, 2.4};
 // const double mDiffRapBds[nDiffRapBins+2] = {-2.4, -2.1, -1.9, -1.6, 1.6, 1.9, 2.1, 2.4};
 
-const int    nDiffRapBins                = 4;
-const double mDiffRapLow[nDiffRapBins]   = {-2.4, -2.0, 1.6, 2.0};
-const double mDiffRapHi[nDiffRapBins]    = {-2.0, -1.6, 2.0, 2.4};
-
-const double mDiffRapBds[nDiffRapBins+2] = {-2.4, -2.0, -1.6, 1.6, 2.0, 2.4};
-//const double mDiffRapBds[nDiffRapBins+2] = {-3.3, -3.0, -2.7, -2.4, -2.1, -1.9, -1.6, -1.3, -1.0, -0.7, 0.7, 1.0, 1.3, 1.6, 1.9, 2.1, 2.4, 2.7, 3.0, 3.3};
+const int    nDiffRapBins = 18;
+const double mDiffRapLow[nDiffRapBins] = {-3.3, -3.0, -2.7, -2.4, -2.1, -1.9, -1.6, -1.3, -1.0, 0.7, 1.0, 1.3, 1.6, 1.9, 2.1, 2.4, 2.7, 3.0};
+const double mDiffRapHi[nDiffRapBins]  = {-3.0, -2.7, -2.4, -2.1, -1.9, -1.6, -1.3, -1.0, -0.7, 1.0, 1.3, 1.6, 1.9, 2.1, 2.4, 2.7, 3.0, 3.3};
+const double mDiffRapBds[nDiffRapBins+2] = {-3.3, -3.0, -2.7, -2.4, -2.1, -1.9, -1.6, -1.3, -1.0, -0.7, 0.7, 1.0, 1.3, 1.6, 1.9, 2.1, 2.4, 2.7, 3.0, 3.3};
 
 const double mMassLow4MuonAccStudy = 2;
 const double mMassHi4MuonAccStudy  = 5;
@@ -116,5 +117,31 @@ const double br_Psi2uu   = 0.0080;
 const double br_Psi2Jpsi = 0.6140;
 const double br_Jpsi2uu_Uncer = 0.033/5.961 * 100.0;    // branching ratio uncertainty in percentage
 
+// ## Histogram Constants ########################################################################
+const Double_t mTinyNum = 1.e-6;
+const Int_t    mHistRapBins		= 80;
+const Double_t mHistRapLow		= -4;
+const Double_t mHistRapHig		= 4;
+const Int_t    mHistPtBins		= 1600;
+const Double_t mHistPtLow		= 0;
+const Double_t mHistPtHig		= 4;
+const Int_t    mHistMassBins		= 300;
+const Double_t mHistMassLow		= 2;
+const Double_t mHistMassHig		= 5;
+const Int_t    mHistEtaBins		= 200;
+const Double_t mHistEtaLow		= -3.0;
+const Double_t mHistEtaHig		= 3.0;
+const Int_t    mHistPhiBins		= 100;
+const Double_t mHistPhiLow		= -PI;
+const Double_t mHistPhiHig		= PI;
+const Int_t    mHistPBins		= 200;
+const Double_t mHistPLow		= 0.0;
+const Double_t mHistPHig		= 1.0;
+const Int_t    mHistdEdxBins	= 200;
+const Double_t mHistdEdxLow		= 0;
+const Double_t mHistdEdxHig		= 15;
+const Int_t    mHistLogdEdxBins	= 200;
+const Double_t mHistLogdEdxLow	= -2;
+const Double_t mHistLogdEdxHig	= 5;
 
 #endif

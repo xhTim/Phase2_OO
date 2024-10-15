@@ -7,7 +7,7 @@ Main script for running the analysis on MC.
 */
 
 #include "inFiles/headers/ParticleTree.C"
-#include "../common/functions.C"
+#include "../common/function.C"
 #include "../common/EvtSel.C"
 #include "../common/matching.C"
 #include "../common/headers.h"
@@ -92,8 +92,8 @@ void ana_mc(TString FileName, bool SoftMuon_option = true, int HFVeto_option = m
 		double phi_neg = tree->gen_charge->at(0) < 0 ? tree->gen_phi->at(0) : tree->gen_phi->at(1);
 
 		TLorentzVector posFourMom, negFourMom, pairFourMom;
-		posFourMom.SetPtEtaPhiM(pT_pos, eta_pos, phi_pos, MUON_MASS);
-		negFourMom.SetPtEtaPhiM(pT_neg, eta_neg, phi_neg, MUON_MASS);
+		posFourMom.SetPtEtaPhiM(pT_pos, eta_pos, phi_pos, Mmuon);
+		negFourMom.SetPtEtaPhiM(pT_neg, eta_neg, phi_neg, Mmuon);
 		pairFourMom = posFourMom + negFourMom;
 
 		Double_t pT = pairFourMom.Pt();
@@ -162,8 +162,8 @@ void ana_mc(TString FileName, bool SoftMuon_option = true, int HFVeto_option = m
 			double phi_neg = tree->cand_phi->at(dauIdx_neg);
 			
 			TLorentzVector posFourMom, negFourMom, pairFourMom;
-			posFourMom.SetPtEtaPhiM(pT_pos, eta_pos, phi_pos, MUON_MASS);
-			negFourMom.SetPtEtaPhiM(pT_neg, eta_neg, phi_neg, MUON_MASS);
+			posFourMom.SetPtEtaPhiM(pT_pos, eta_pos, phi_pos, Mmuon);
+			negFourMom.SetPtEtaPhiM(pT_neg, eta_neg, phi_neg, Mmuon);
 			pairFourMom = posFourMom + negFourMom;
 
 			Double_t pt   = pairFourMom.Pt();
@@ -173,6 +173,7 @@ void ana_mc(TString FileName, bool SoftMuon_option = true, int HFVeto_option = m
 			Double_t y    = pairFourMom.Rapidity();
 			hMvsPtvsRap->Fill(y, pt, mass);
 
+			/*
 			if (abs(eta_pos) < 1.2)
 			{
 				reco_match_gen(tree, dauIdx_pos, hPtResDeltaR_RecoGen1);
@@ -238,6 +239,7 @@ void ana_mc(TString FileName, bool SoftMuon_option = true, int HFVeto_option = m
 				hPtEta5->Fill(pT_pos, eta_pos);
 				hPtEta5->Fill(pT_neg, eta_neg);
 			}
+			*/
 		}
 	}
 
@@ -255,7 +257,7 @@ void ana_mc(TString FileName, bool SoftMuon_option = true, int HFVeto_option = m
 	// write_sequence( hPtEtaPhi_MuNeg_acc );
 	// write_sequence( hPtEtaPhi_Mu_gen, {"xy"}, 1);
 	// write_sequence( hPtEtaPhi_Mu_acc, {"xy"}, 1);
-	write_sequence( hRapPtPhi_DiMu_gen, {"xy"}, 1);
+	//write_sequence( hRapPtPhi_DiMu_gen, {"xy"}, 1);
 	write_sequence( hRapPtMass_DiMu_gen, {"xy"}, 1);
 	// write_sequence( hRapPtPhi_DiMu_acc, {"xy"}, 1);
 	// write_sequence( hRapPtMass_DiMu_acc, {"xy"}, 1);
@@ -266,16 +268,16 @@ void ana_mc(TString FileName, bool SoftMuon_option = true, int HFVeto_option = m
 	// write_sequence( hAbsPtResDeltaRMass_trk_pos, {"xy"}, 1);
 	// write_sequence( hAbsPtResDeltaRMass_trk_neg, {"xy"}, 1);
 	write_sequence( hMvsPtvsRap, {}, 1);
-	write_sequence( hPtResDeltaR_RecoGen1);
-	write_sequence( hPtResDeltaR_RecoGen2);
-	write_sequence( hPtResDeltaR_RecoGen3);
-	write_sequence( hPtResDeltaR_RecoGen4);
-	write_sequence( hPtResDeltaR_RecoGen5);
-	write_sequence( hPtEta1, 1);
-	write_sequence( hPtEta2, 1);
-	write_sequence( hPtEta3, 1);
-	write_sequence( hPtEta4, 1);
-	write_sequence( hPtEta5, 1);
+	//write_sequence( hPtResDeltaR_RecoGen1);
+	//write_sequence( hPtResDeltaR_RecoGen2);
+	//write_sequence( hPtResDeltaR_RecoGen3);
+	//write_sequence( hPtResDeltaR_RecoGen4);
+	//write_sequence( hPtResDeltaR_RecoGen5);
+	//write_sequence( hPtEta1, 1);
+	//write_sequence( hPtEta2, 1);
+	//write_sequence( hPtEta3, 1);
+	//write_sequence( hPtEta4, 1);
+	//write_sequence( hPtEta5, 1);
 
 	outFile->Close();	
 }

@@ -1,3 +1,5 @@
+#include "../common/constants.h"
+
 #ifndef function_C
 #define function_C
 //TH1D *rebHisto(TH1D *oldHisto, TString name, int nBinsX, double *BinX, TString NorX = "X");
@@ -32,6 +34,40 @@
 //void pdfAction(TCanvas *c, TPDF *ps, Bool_t isClosePDF);
 
 const double maxDiff = 1.e-10;
+
+//__________________________________________________
+void update_progress(int ientry, int total_entries, int percentage_increment)
+{
+	if (ientry % (total_entries / percentage_increment) == 0)
+	{
+		std::cout << "Processing " << ientry << "th entry... (" << (int)((double)ientry / total_entries * 100) << "%)" << std::endl;
+	}
+}
+
+std::map<TString, TH1*> get_hists_map(TFile *inFile)
+{
+	// retrieve the histograms name from the input file and save them into a map
+	TIter next(inFile->GetListOfKeys());
+	TKey *key;
+	TString name;
+	std::map<TString, TH1*> hists;
+
+	cout << "The histograms in the input file are: " << endl;
+	while ((key = (TKey*)next()))
+	{
+		name = key->GetName();
+		cout << name << endl;
+		hists[name] = (TH1*)inFile->Get(name);
+	}
+
+	return hists;
+}
+
+bool isJpsi(int pdgId)
+{
+	// ! require Jpsi
+	return pdgId == 443;
+}
 
 //__________________________________________________
 TH1D *rebHisto(TH1D *oldHisto, TString name, int nBinsX, const double *BinX, TString NorX = "X")
@@ -1011,6 +1047,104 @@ void pdfAction(TCanvas *c, TPDF *ps, Bool_t isClosePDF = kFALSE)
 //    c->cd();                                                                       
 //    ps->NewPage();                                                                 
 //    ps->Off();                                                                     
-//};     
+//};
+
+void write_seq(TH3D *h3D, int option = 0)
+{
+	// print string with proper format filled with - character
+	std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
+	std::cout << "Writing 3D histogram: " << h3D->GetName() << " with option: " << option << std::endl;
+	std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
+	h3D->Write();
+
+	if (option == -1)
+	{
+		cout << " Option -1: Only write 3D histogram" << endl;
+	}
+	else if (option == 0)
+	{
+		h3D->Project3D("yx")->Write();
+		h3D->Project3D("zx")->Write();
+	}
+	else if (option == 1)
+	{
+		h3D->Project3D("yx")->Write();
+		h3D->Project3D("zx")->Write();
+
+		h3D->ProjectionX()->Write();
+		h3D->ProjectionY()->Write();
+		h3D->ProjectionZ()->Write();
+	}
+	else if (option == 2)
+	{
+		h3D->ProjectionX()->Write();
+		h3D->ProjectionY()->Write();
+		h3D->ProjectionZ()->Write();
+	}
+	else if (option == 3)
+	{
+		h3D->Project3D("yx")->Write();
+		h3D->ProjectionX()->Write();
+		h3D->ProjectionY()->Write();
+		h3D->ProjectionZ()->Write();
+	}
+	else if (option == 4)
+	{
+		h3D->Project3D("zx")->Write();
+		h3D->ProjectionX()->Write();
+		h3D->ProjectionY()->Write();
+		h3D->ProjectionZ()->Write();
+	}
+	else
+	{
+		std::cout << "Invalid option: " << option << std::endl;
+	}
+}
+
+void write_sequence(TH3D *h3D, std::vector<TString> projects = {}, int option = 0)
+{
+	// print string with proper format filled with - character
+	std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
+	std::cout << "  Writing 3D histogram: " << h3D->GetName() << std::endl;
+	h3D->Write();
+
+	for (auto project : projects)
+	{
+		std::cout << "  Projecting 3D histogram: " << project << std::endl;
+		h3D->Project3D(project)->Write();
+	}
+
+	if (option == 1)
+	{
+		cout << "  Option 1: Projecting All 1D histograms" << endl;
+		h3D->ProjectionX()->Write();
+		h3D->ProjectionY()->Write();
+		h3D->ProjectionZ()->Write();
+	}
+	std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
+}
+
+void write_sequence(TH2D *h2D,  int option = 0)
+{
+	// print string with proper format filled with - character
+	std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
+	std::cout << "  Writing 2D histogram: " << h2D->GetName() << std::endl;
+	h2D->Write();
+
+	if (option == 1)
+	{
+		cout << "  Option 1: Projecting All 1D histograms" << endl;
+		h2D->ProjectionX()->Write();
+		h2D->ProjectionY()->Write();
+	}
+	std::cout << std::setfill('-') << std::setw(80) << "-" << std::endl;
+}
+
+void write_seq(TH2D *h2D)
+{
+	h2D->Write();
+	h2D->ProjectionX()->Write();
+	h2D->ProjectionY()->Write();
+}
 
 #endif

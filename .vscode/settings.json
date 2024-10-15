@@ -1,0 +1,8 @@
+{
+        "files.associations": {
+                "EvtSel.C": "cpp",
+                "genEff.C": "cpp",
+                "ana_mc.C": "cpp",
+                "genTemp.C": "cpp"
+        }
+}

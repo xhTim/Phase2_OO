@@ -83,7 +83,10 @@ bool check_soft_muons(ParticleTree *tree, int icand)
 	for (int imuon = 0; imuon < tree->muon_candIdx->size(); imuon++)
 	{
 		if ((tree->muon_candIdx->at(imuon) == dauIdx_1 || tree->muon_candIdx->at(imuon) == dauIdx_2) && tree->muon_softID->at(imuon))
+		{
 			pass = true;
+			break;
+		}
 	}
 
 	return pass;
