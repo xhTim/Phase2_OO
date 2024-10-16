@@ -3,6 +3,7 @@
                 "EvtSel.C": "cpp",
                 "genEff.C": "cpp",
                 "ana_mc.C": "cpp",
-                "genTemp.C": "cpp"
+                "genTemp.C": "cpp",
+                "mixEvt.C": "cpp"
         }
 }

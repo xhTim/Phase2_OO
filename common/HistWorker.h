@@ -5,7 +5,7 @@
 	Worker Here
 */
 
-static const Double_t mTinyNum = 1.e-6;
+// static const Double_t mTinyNum = 1.e-6;
 
 struct HistWorker
 {

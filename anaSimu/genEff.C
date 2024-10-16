@@ -23,7 +23,7 @@ void genEff(TString FileName)
         hRap_gen_Symm->SetBinError(i + 1, sqrt(hRap_gen_Symm->GetBinContent(i + 1)));
     }
 
-    TH1D *hEffvsRap_Symm = (TH1D *)hRap_Symm->Clone("hEffvsRap_Symm");
+    TH1D *hEffvsRap_Symm = (TH1D *)hRap_Symm->Clone("hEffvsRap_Symm_" + FileName);
     hEffvsRap_Symm->Divide(hRap_gen_Symm);
     hEffvsRap_Symm->SetTitle(";y;");
 
