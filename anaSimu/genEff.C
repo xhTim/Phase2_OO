@@ -1,7 +1,7 @@
 #include "../common/headers.h"
 #include "../common/function.C"
 
-void genEff(TString FileName)
+void genEff(TString FileName = "CohJpsi")
 {
     TFile *inFile = new TFile("outFiles/ana_mc_" + FileName + ".root", "READ");
 

@@ -87,6 +87,11 @@ const double mDiffRapLow[nDiffRapBins] = {-3.3, -3.0, -2.7, -2.4, -2.1, -1.9, -1
 const double mDiffRapHi[nDiffRapBins]  = {-3.0, -2.7, -2.4, -2.1, -1.9, -1.6, -1.3, -1.0, -0.7, 1.0, 1.3, 1.6, 1.9, 2.1, 2.4, 2.7, 3.0, 3.3};
 const double mDiffRapBds[nDiffRapBins+2] = {-3.3, -3.0, -2.7, -2.4, -2.1, -1.9, -1.6, -1.3, -1.0, -0.7, 0.7, 1.0, 1.3, 1.6, 1.9, 2.1, 2.4, 2.7, 3.0, 3.3};
 
+//const int    nDiffRapBins = 16;
+//const double mDiffRapLow[nDiffRapBins] = {-3.3, -3.0, -2.7, -2.4, -2.1, -1.8, -1.5, -1.2, 0.7, 1.2, 1.5, 1.8, 2.1, 2.4, 2.7, 3.0};
+//const double mDiffRapHi[nDiffRapBins]  = {-3.0, -2.7, -2.4, -2.1, -1.8, -1.5, -1.2, -0.7, 1.2, 1.5, 1.8, 2.1, 2.4, 2.7, 3.0, 3.3};
+//const double mDiffRapBds[nDiffRapBins+2] = {-3.3, -3.0, -2.7, -2.4, -2.1, -1.8, -1.5, -1.2, -0.7, 0.7, 1.2, 1.5, 1.8, 2.1, 2.4, 2.7, 3.0, 3.3};
+
 const double mMassLow4MuonAccStudy = 2;
 const double mMassHi4MuonAccStudy  = 5;
 

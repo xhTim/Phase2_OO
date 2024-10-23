@@ -2,8 +2,6 @@
 #include "../common/function.C"
 #include "../common/funUtil.h"
 
-const Double_t mTinyNum = 1.e-6;
-
 int    mGenMarker = 20;
 int    mGenColor  = 1;
 int    mGenWidth  = 2;
@@ -58,13 +56,13 @@ const Double_t mMass[nSpecs-1]  = {3.096, 3.096, 3.096, 3.096, 3.096, 3.096, 3.6
 //const Double_t    mMass[nSpecs-1] = {3.096};
 
 TFile*f[nSpecs];
-TH3D *hMvsPtvsRap_Gen[nSpecs];
+TH3D *hMvsPtvsRap_gen[nSpecs];
 TH3D *hMvsPtvsRap_woEvtSel[nSpecs];
 TH3D *hMvsPtvsRap[nSpecs];
-TH1D *hRap_Gen[nSpecs];
+TH1D *hRap_gen[nSpecs];
 TH1D *hRap_woEvtSel[nSpecs];
 TH1D *hRap[nSpecs];
-TH1D *hRap_Gen_Symm[nSpecs];
+TH1D *hRap_gen_Symm[nSpecs];
 TH1D *hRap_woEvtSel_Symm[nSpecs];
 TH1D *hRap_Symm[nSpecs];
 
@@ -108,11 +106,11 @@ void genEffAndTemp(  )
 	
 	readFiles();
 	
-	calEff();
+	//calEff();
 	
-	drawEff();
+	//drawEff();
 	
-	//getTemp();
+	getTemp();
 	
 	saveFiles();
 
@@ -127,20 +125,21 @@ void readFiles( )
 
 		if(template_option==0)
 		{
-			f[is] = TFile::Open( Form("mcHistos/dimuonHistos.%s.root", specFileName[is].Data()) );
+			f[is] = TFile::Open( Form("outFiles/ana_mc_%s.root", specFileName[is].Data()) );
 		}
 		else
 		{
-			f[is] = TFile::Open( Form("mcHistos_NewCohJpsi/dimuonHistos.%s.root", specFileName[is].Data()) );
+			f[is] = TFile::Open( Form("outFiles/ana_mc_%s.root", specFileName[is].Data()) );
 		}
 
 		cout<<"readin: "<<f[is]->GetName()<<endl;
 
-		hMvsPtvsRap_Gen[is]      = (TH3D *)f[is]->Get("hMvsPtvsRap_Gen");      //no smearing
-		hMvsPtvsRap_woEvtSel[is] = (TH3D *)f[is]->Get("hMvsPtvsRap_woEvtSel"); //with smearing, no event level cut
+		//hMvsPtvsRap_gen[is]      = (TH3D *)f[is]->Get("hRapPtMass_DiMu_gen");      //no smearing
+		//hMvsPtvsRap_woEvtSel[is] = (TH3D *)f[is]->Get("hMvsPtvsRap_woEvtSel"); //with smearing, no event level cut
 		hMvsPtvsRap[is]          = (TH3D *)f[is]->Get("hMvsPtvsRap");          //with smearing, with event level cut
 
 		//for event selection efficiency
+		/*
 		hMvsPtvsRap_woEvtSel_woSmear[is] = (TH3D *)f[is]->Get("hMvsPtvsRap_woEvtSel_woSmear"); //no event selection but after goodMuPair selection
 		hMvsPtvsRap_woSmear[is]          = (TH3D *)f[is]->Get("hMvsPtvsRap_woSmear");          //...and after event selection
 
@@ -148,7 +147,7 @@ void readFiles( )
 		int massBinLow, massBinHi;
 
 		massBinLow = 1;
-		massBinHi  = hMvsPtvsRap_Gen[is]->GetNbinsZ();
+		massBinHi  = hMvsPtvsRap_gen[is]->GetNbinsZ();
 
 		//for event selection efficiency	
 		hRap_noEvtSel[is]      = (TH1D *)hMvsPtvsRap_woEvtSel_woSmear[is] ->ProjectionX( Form("hRap_noEvtSel_%s",  specName[is].Data()), 0, -1, massBinLow, massBinHi );
@@ -156,7 +155,7 @@ void readFiles( )
 		//--------------
 
 		//Denominator
-		hRap_Gen[is]           = (TH1D *)hMvsPtvsRap_Gen[is]      ->ProjectionX( Form("hRap_Gen_%s",      specName[is].Data()), 0,       -1,       massBinLow, massBinHi );
+		hRap_gen[is]           = (TH1D *)hMvsPtvsRap_gen[is]      ->ProjectionX( Form("hRap_gen_%s",      specName[is].Data()), 0,       -1,       massBinLow, massBinHi );
 		
 		//Numberator, need to apply the pt cutoff as the pt acceptance factor
 		const int ptBinLow    = hMvsPtvsRap[is]->GetYaxis()->FindBin( ptWindowLow + mTinyNum );
@@ -166,7 +165,7 @@ void readFiles( )
 		hRap[is]               = (TH1D*) hMvsPtvsRap[is]          ->ProjectionX( Form("hRap_%s",          specName[is].Data()), ptBinLow, ptBinHig, massBinLow, massBinHi );
 
 		//Rebin rapidity bins to be same as signal rapidity bins
-		hRap_Gen[is]      = (TH1D*) rebHisto( hRap_Gen[is],      Form("hRap_Gen_ispec%d",     is), nDiffRapBins+1, mDiffRapBds, "NO");
+		hRap_gen[is]      = (TH1D*) rebHisto( hRap_gen[is],      Form("hRap_gen_ispec%d",     is), nDiffRapBins+1, mDiffRapBds, "NO");
 		
 		hRap[is]          = (TH1D*) rebHisto( hRap[is],          Form("hRap_ispec%d",         is), nDiffRapBins+1, mDiffRapBds, "NO");
 		hRap_woEvtSel[is] = (TH1D*) rebHisto( hRap_woEvtSel[is], Form("hRap_woEvtSel_ispec%d",is), nDiffRapBins+1, mDiffRapBds, "NO");
@@ -174,7 +173,7 @@ void readFiles( )
 		hRap_noEvtSel[is]  = (TH1D*) rebHisto( hRap_noEvtSel[is],  Form("hRap_noEvtSel_ispec%d", is), nDiffRapBins+1, mDiffRapBds, "NO");
 		hRap_aftEvtSel[is] = (TH1D*) rebHisto( hRap_aftEvtSel[is], Form("hRap_aftEvtSel_ispec%d",is), nDiffRapBins+1, mDiffRapBds, "NO");
 
-		hRap_Gen_Symm[is] 	   = (TH1D *)hRap_Gen[is]		->Clone( Form("hRap_Gen_Symm_ispec%d",     	is) );
+		hRap_gen_Symm[is] 	   = (TH1D *)hRap_gen[is]		->Clone( Form("hRap_gen_Symm_ispec%d",     	is) );
 		hRap_Symm[is] 	  	   = (TH1D *)hRap[is]			->Clone( Form("hRap_Symm_ispec%d",     		is) );
 		hRap_woEvtSel_Symm[is]  = (TH1D *)hRap_woEvtSel[is]		->Clone( Form("hRap_woEvtSel_Symm_ispec%d", is) );
 		
@@ -184,7 +183,7 @@ void readFiles( )
 		//For SymmetricRapBin, the positive rap side of the histogram is combined y 
 		for (int i = nDiffRapBins/2 + 1; i < nDiffRapBins + 1; ++i)
 		{
-			hRap_Gen_Symm[is]		->AddBinContent(i+1,	hRap_Gen[is]	 ->GetBinContent(nDiffRapBins + 1 - i));
+			hRap_gen_Symm[is]		->AddBinContent(i+1,	hRap_gen[is]	 ->GetBinContent(nDiffRapBins + 1 - i));
 
 			hRap_Symm[is] 			->AddBinContent(i+1,	hRap[is]		 ->GetBinContent(nDiffRapBins + 1 - i));
 			hRap_woEvtSel_Symm[is]	->AddBinContent(i+1,	hRap_woEvtSel[is] ->GetBinContent(nDiffRapBins + 1 - i));
@@ -192,6 +191,7 @@ void readFiles( )
 			hRap_noEvtSel_Symm[is]	->AddBinContent(i+1,	hRap_noEvtSel[is] ->GetBinContent(nDiffRapBins + 1 - i));
 			hRap_aftEvtSel_Symm[is]	->AddBinContent(i+1,	hRap_aftEvtSel[is]->GetBinContent(nDiffRapBins + 1 - i));
 		}
+		*/
 	}//ispec
 }
 //----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -204,24 +204,24 @@ void calEff()
 		//calculate efficiencies
 		//------------------------------------------------------------------------------------------------------------------------------------------
 		hEffvsRap_woEvtSel[is] = (TH1D *)hRap_woEvtSel[is]->Clone( Form("hEffvsRap_woEvtSel_%s", specName[is].Data()) );
-		hEffvsRap_woEvtSel[is] ->Divide( hRap_woEvtSel[is], hRap_Gen[is], 1, 1, "B");
+		hEffvsRap_woEvtSel[is] ->Divide( hRap_woEvtSel[is], hRap_gen[is], 1, 1, "B");
 		hEffvsRap_woEvtSel[is] ->SetTitle( specTitle[is].Data() );
 		hEffvsRap_woEvtSel[is] ->GetYaxis()->SetTitle("Efficiency");
 
 		hEffvsRap[is]          = (TH1D *)hRap[is]->Clone( Form("hEffvsRap_%s", specName[is].Data()) );
-		hEffvsRap[is]          ->Divide( hRap[is], hRap_Gen[is], 1, 1, "B");
+		hEffvsRap[is]          ->Divide( hRap[is], hRap_gen[is], 1, 1, "B");
 		hEffvsRap[is]          ->SetTitle( specTitle[is].Data() );
 		hEffvsRap[is]          ->GetYaxis()->SetTitle("Efficiency");
 
 		//when no TnP applied, these efficiency is identical to the above calculated Event selection efficiency
 
 		hEffvsRap_woEvtSel_Symm[is] = (TH1D *)hRap_woEvtSel_Symm[is]->Clone( Form("hEffvsRap_woEvtSel_Symm_%s", specName[is].Data()) );
-		hEffvsRap_woEvtSel_Symm[is] ->Divide( hRap_woEvtSel_Symm[is], hRap_Gen_Symm[is], 1, 1, "B");
+		hEffvsRap_woEvtSel_Symm[is] ->Divide( hRap_woEvtSel_Symm[is], hRap_gen_Symm[is], 1, 1, "B");
 		hEffvsRap_woEvtSel_Symm[is] ->SetTitle( specTitle[is].Data() );
 		hEffvsRap_woEvtSel_Symm[is] ->GetYaxis()->SetTitle("Efficiency");
 
 		hEffvsRap_Symm[is]          = (TH1D *)hRap_Symm[is]->Clone( Form("hEffvsRap_Symm_%s", specName[is].Data()) );
-		hEffvsRap_Symm[is]          ->Divide( hRap_Symm[is], hRap_Gen_Symm[is], 1, 1, "B");
+		hEffvsRap_Symm[is]          ->Divide( hRap_Symm[is], hRap_gen_Symm[is], 1, 1, "B");
 		hEffvsRap_Symm[is]          ->SetTitle( specTitle[is].Data() );
 		hEffvsRap_Symm[is]          ->GetYaxis()->SetTitle("Efficiency");
 
@@ -262,20 +262,20 @@ void drawEff()
 		c2->cd(1);
 		gPad->SetLogy(0);
 
-		setHisto(hRap_Gen[is],      20, 1, 1, 1, 2);
+		setHisto(hRap_gen[is],      20, 1, 1, 1, 2);
 		setHisto(hRap_woEvtSel[is], 24, 1, 2, 2, 2);
 		setHisto(hRap[is],          25, 1, 4, 4, 2);
 
-		hRap_Gen[is]      ->GetYaxis()->SetTitle("Entries");
-		hRap_Gen[is]      ->GetXaxis()->CenterTitle();
-		hRap_Gen[is]      ->SetMinimum(1);
-		hRap_Gen[is]      ->Draw("p");
+		hRap_gen[is]      ->GetYaxis()->SetTitle("Entries");
+		hRap_gen[is]      ->GetXaxis()->CenterTitle();
+		hRap_gen[is]      ->SetMinimum(1);
+		hRap_gen[is]      ->Draw("p");
 		hRap_woEvtSel[is] ->Draw("psame");
 		hRap[is]          ->Draw("psame");
 
 		if(is==0)
 		{
-			leg1->AddEntry( hRap_Gen[is],      "GEN #times Acc.",                                                                  "pl");
+			leg1->AddEntry( hRap_gen[is],      "GEN #times Acc.",                                                                  "pl");
 			leg1->AddEntry( hRap_woEvtSel[is], "GEN #times Acc. #times #varepsilon_{reco}#times#varepsilon_{trig}",                           "pl");
 			leg1->AddEntry( hRap[is],          "GEN #times Acc. #times #varepsilon_{reco}#times#varepsilon_{trig}#times#varepsilon_{evtSel}", "pl");
 		}
@@ -572,6 +572,7 @@ void saveFiles( )
 	// write down efficiencies
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 
+	/*
 	TFile *fOut = new TFile(Form("%s/Efficiency_AllSpecs_%dRapBins%s%s.root", outDir[template_option].Data(), nDiffRapBins, TnPcases[RunTnPcase].Data(), HFcases[RunHFcase].Data()), "recreate");
 	cout<<"save efficiencies into: "<<fOut->GetName()<<endl;
 	fOut->cd();
@@ -586,10 +587,11 @@ void saveFiles( )
 		hEffvsRap_Symm[is]          ->Write();
 		hEvtSelEffvsRap_Symm[is]    ->Write();
 		hRap[is]->Write();
-		hRap_Gen[is]->Write();
+		hRap_gen[is]->Write();
 	}
 
 	fOut->Close();
+	*/
 
 	//----------------------------------------------------------------------------------------------------------------------------------------------------------
 	// write down templates

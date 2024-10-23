@@ -86,8 +86,8 @@ struct QEDPdf : public PdfFactory
 	{
 		switch(f)
 		{
-			case Cubic 		:	fQED = new TF1("fQED", fReject4QED, massLow4Fit, massHig4Fit, 4);	break;
-			default			:	fQED = new TF1("fQED", fReject4QED, massLow4Fit, massHig4Fit, 4);	break;
+			case Cubic 		:	fQED = new TF1("fQED", fReject4QED, massLow4Fit, massHig4Fit, 2);	break;
+			default			:	fQED = new TF1("fQED", fReject4QED, massLow4Fit, massHig4Fit, 2);	break;
 		}
 
 		for (int i = 0; i < FitN; ++i)
@@ -97,15 +97,15 @@ struct QEDPdf : public PdfFactory
 
 		mP0	=	RooConstVar(  "mP0", "mP0",  fQED->GetParameter(0));
 		mP1	=	RooConstVar(  "mP1", "mP1",  fQED->GetParameter(1));
-		mP2	=	RooConstVar(  "mP2", "mP2",  fQED->GetParameter(2));
-		mP3	=	RooConstVar(  "mP3", "mP3",  fQED->GetParameter(3));
+		// mP2	=	RooConstVar(  "mP2", "mP2",  fQED->GetParameter(2));
+		// mP3	=	RooConstVar(  "mP3", "mP3",  fQED->GetParameter(3));
 		// mP0	=	RooRealVar(  "mP0", "mP0",  fQED->GetParameter(0), -1.e8,  1.e8);
 		// mP1	=	RooRealVar(  "mP1", "mP1",  fQED->GetParameter(1), 0.,     1.e5);
 		// mP2	=	RooRealVar(  "mP2", "mP2",  fQED->GetParameter(2), -1.e5,    0.);
 		// mP3	=	RooRealVar(  "mP3", "mP3",  fQED->GetParameter(3), 0.,    1.e4);
 
-		Pdf = new RooGenericPdf("qedPdf", "qedPdf", "mP0 + mP1*mMass + mP2*mMass*mMass + mP3*mMass*mMass*mMass", 
-									RooArgSet(mP0, mP1, mP2, mP3, mMass));
+		Pdf = new RooGenericPdf("qedPdf", "qedPdf", "mP0 + mP1*mMass", 
+									RooArgSet(mP0, mP1, mMass));
 	}
 	void InitQuartic()
 	{
@@ -156,13 +156,13 @@ struct QEDPdf : public PdfFactory
 	protected:
 	static double fReject4QED(double *x, double *par)
 	{
-		if((x[0]>2.80&& x[0]<3.35) || (x[0]>3.50 && x[0]<3.85))
+		if((x[0]>2.80&& x[0]<3.35))
 		{
 			TF1::RejectPoint();
 			return 0;
 		}
 
-		return par[0] + par[1]*x[0] + par[2]*pow(x[0],2) + par[3]*pow(x[0],3);
+		return par[0] + par[1]*x[0];
 	}
 	static double fReject4QED_Quartic(double *x, double *par)
 	{

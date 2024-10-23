@@ -288,7 +288,7 @@ void fitCohMass_4RNRfD( const double massLow4Fit=2.6, const double massHig4Fit=4
 	c1->SetLogy(0);
 	RooRealVar  mMass("mMass", "m_{#mu#mu} (GeV)", massLow4Fit, massHig4Fit);
 
-	TFile *inf_Temps = TFile::Open(Form("../simulation/%s/MassPtTemp_AllSpecs_massWindow_2.95_3.25_%dRapBins%s.root", template_Dir[template_option].Data(), nDiffRapBins, TnPcases[RunTnPcase].Data()));
+	TFile *inf_Temps = TFile::Open(Form("../anaSimu/out4effAndTemp/MassPtTemp_AllSpecs_massWindow_2.95_3.25_%dRapBins%s.root", nDiffRapBins, TnPcases[RunTnPcase].Data()));
 	TF1 *fQED;
 	fQED = new TF1("fQED", fReject4QED, massLow4Fit, massHig4Fit, 4);
 	TF1 *fCohJpsiTemp;
@@ -385,8 +385,8 @@ void fitCohMass_4RNRfD( const double massLow4Fit=2.6, const double massHig4Fit=4
 			RooRealVar  jpsiMu		( "jpsiMu",      	"jpsiMu",		3.096,	2.90,	3.2 	);
 			RooRealVar  jpsiSigma	( "jpsiSigma",   	"jpsiSigma",	0.045,	0.01,	0.1 	);
 
-			// RooRealVar  gausN		( "gausN",       	"gausN",		3.5,	0.00,	20 		);
-			// RooConstVar  sigmaRatio 	( "sigmaRatio",   "sigmaRatio",  	Init_sigmaRatio );
+			RooRealVar  gausN		( "gausN",       	"gausN",		3.5,	0.00,	20 		);
+			RooConstVar  sigmaRatio 	( "sigmaRatio",   "sigmaRatio",  	Init_sigmaRatio );
 
 			// RooRealVar  jpsiN(		"jpsiN",		"jpsiN",		9.,   0.1,  1.e2  );
 			// RooRealVar  psiN(		"psiN",			"psiN",			9.,   0.1,  1.e2  );
@@ -407,8 +407,8 @@ void fitCohMass_4RNRfD( const double massLow4Fit=2.6, const double massHig4Fit=4
 			RooGenericPdf *qedPdf 	= cQEDPdf.GetPdf();
 
 			JpsiPdf cJpsiPdf(	hCohMass, mMass, massLow4Fit, massHig4Fit	);
-			cJpsiPdf.Init(cbAlpha, cbN, jpsiSigma, jpsiMu);
-			// cJpsiPdf.InitCrystalBallGauss(cbAlpha, cbN, jpsiSigma, sigmaRatio, jpsiMu, gausN);
+			// cJpsiPdf.Init(cbAlpha, cbN, jpsiSigma, jpsiMu);
+			cJpsiPdf.InitCrystalBallGauss(cbAlpha, cbN, jpsiSigma, sigmaRatio, jpsiMu, gausN);
 			// cJpsiPdf.InitDoubleCrystalBall(jpsiN, jpsiMu, jpsiSigma, cbNL, cbAlphaL, cbNR, cbAlphaR);
 			// cJpsiPdf.InitAsymDoubleCrystalBall(jpsiN, jpsiMu, jpsiSigmaL, jpsiSigmaR, cbNL, cbAlphaL, cbNR, cbAlphaR);
 			RooGenericPdf *jpsiPdf 	= cJpsiPdf.GetPdf();
@@ -448,18 +448,9 @@ void fitCohMass_4RNRfD( const double massLow4Fit=2.6, const double massHig4Fit=4
 			RooAddPdf  totMassPdf("totMassPdf", "totMassPdf", RooArgList(*jpsiPdf, *qedPdf), RooArgList(nJpsi, nQED));//Add
 
 			RooDataHist dataMass("dataMass", "dataMass", mMass, hCohMass);
-			cout << "KKLLLLLLLLL" << dataMass.weight(10);
 
 			//------------------------------------------------------------------------------------------------------------
 			//------------------------------------------------------------------------------------------------------------
-			for (int ib = 1; ib <= hCohMass->GetNbinsX();ib++)
-			{
-				if(fabs(hCohMass->GetBinContent(ib)-pow(hCohMass->GetBinError(ib),2))>1e-3)
-					cout << "TATA: " << hCohMass->GetBinContent(ib) << "\t" << pow(hCohMass->GetBinError(ib), 2) << endl;
-			}
-			TFile* fte = new TFile("fte.root", "recreate");
-			hCohMass->Write();
-			fte->Close();
 			// totMassPdf.fitTo( dataMass, Range(2.70, 3.50), Extended(kTRUE), SumW2Error(kTRUE), Hesse(kTRUE), Minos(kFALSE));
 			totMassPdf.fitTo( dataMass, Extended(kTRUE), SumW2Error(kTRUE), Hesse(kTRUE), Minos(kFALSE), Save());
 			RooFitResult *ResFit = totMassPdf.fitTo( dataMass, Extended(kTRUE), SumW2Error(kTRUE), Hesse(kTRUE), Minos(kFALSE), Save());
@@ -520,7 +511,7 @@ void fitCohMass_4RNRfD( const double massLow4Fit=2.6, const double massHig4Fit=4
 			//			cout<<endl;
 
 
-			double chi2ndf = frameMass->chiSquare("totMassPdf_Norm[mMass]", "h_dataMass", 7); // Need to change to 9 when using CBG. Jpsi+Psi fit
+			double chi2ndf = frameMass->chiSquare("totMassPdf_Norm[mMass]", "h_dataMass", 9); // Need to change to 9 when using CBG. Jpsi+Psi fit
 
 			frameMass->SetYTitle(Form("Events / (%.2f GeV)", hCohMass->GetBinWidth(1)));
 			frameMass->Draw() ;
@@ -1474,7 +1465,7 @@ void saveFile(const TString headerTitle = "Default")
 			hJpsi.SetBinError(hJpsiXsec.FindBin(yMean), NerrJpsi_inMFit[iCase][iy]);
 		}
 		hJpsiXsec.Write();
-		hJpsi.Write();
+		//hJpsi.Write();
 	}
 	file_JpsiXsec->Close();
 }
