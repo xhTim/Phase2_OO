@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "plot_data.C": "cpp",
+        "MidRapAnalyzer.C": "cpp"
+    }
+}

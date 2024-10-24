@@ -6,8 +6,8 @@
 // This file contains some useful functions to convert between different variables
 struct ParamConverter
 {
-    static constexpr double Sqrt_s     = 5500;
-    static constexpr double Gamma_beam = 2928.9;
+    static constexpr double Sqrt_s     = 7000;
+    static constexpr double Gamma_beam = 3730.3;
     static constexpr double Mass_N     = (0.93827+0.93957) / 2;
     // the effective Lorentz factor in the rest frame of the collision partner A. It is related to that in the c.m. system of the two colliding heavy ions
     // Eq.4.2 Prog. Parr. Nucl. Phys.. Vol. 39, pp. 503-564. 1997

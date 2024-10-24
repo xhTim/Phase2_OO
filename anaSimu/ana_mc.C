@@ -57,7 +57,11 @@ void ana_mc(TString FileName, bool SoftMuon_option = true, int HFVeto_option = m
 	// TString FileName = "diPi_ana_mc";
 
 	TString inFileName = "inFiles/diMu_ana_mc_" + FileName + ".root";
-	TString outFileName = "outFiles/ana_mc_" + FileName + ".root";
+	TString outFileName;
+	if(SoftMuon_option)
+		outFileName = "outFiles/ana_mc_" + FileName + ".root";
+	else
+		outFileName = "outFiles/ana_mc_" + FileName + "_ZB.root";
 
 	TFile *inFile = new TFile(inFileName, "READ");
 	TTree *inTree = (TTree*)inFile->Get("diMuAna/ParticleTree");

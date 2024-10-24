@@ -383,7 +383,7 @@ void fitCohMass_4RNRfD( const double massLow4Fit=2.6, const double massHig4Fit=4
 			RooRealVar  cbAlpha 	( "cbAlpha",     	"cbAlpha",		Init_cbAlpha,	0, 10   );
 			RooRealVar  cbN 		( "cbN",         	"cbN",			Init_cbN,		0, 10   );
 			RooRealVar  jpsiMu		( "jpsiMu",      	"jpsiMu",		3.096,	2.90,	3.2 	);
-			RooRealVar  jpsiSigma	( "jpsiSigma",   	"jpsiSigma",	0.045,	0.01,	0.1 	);
+			RooRealVar  jpsiSigma	( "jpsiSigma",   	"jpsiSigma",	0.045,	0.01,	0.2 	);
 
 			RooRealVar  gausN		( "gausN",       	"gausN",		3.5,	0.00,	20 		);
 			RooConstVar  sigmaRatio 	( "sigmaRatio",   "sigmaRatio",  	Init_sigmaRatio );
@@ -842,8 +842,8 @@ void fitFullMassAndPt_4Decouple( const double massLow4Fit=2.6, const double mass
 			RooRealVar  jpsiMu		( "jpsiMu",      	"jpsiMu",		3.096,	2.90,	3.2 	);
 			RooRealVar  jpsiSigma	( "jpsiSigma",   	"jpsiSigma",	0.045,	0.01,	0.1 	);
 
-			// RooRealVar  gausN		( "gausN",       	"gausN",		3.5,	0.00,	20 		);
-			// RooConstVar  sigmaRatio 	( "sigmaRatio",   "sigmaRatio",  	Init_sigmaRatio );
+			RooRealVar  gausN		( "gausN",       	"gausN",		3.5,	0.00,	20 		);
+			RooConstVar  sigmaRatio 	( "sigmaRatio",   "sigmaRatio",  	Init_sigmaRatio );
 
 			// RooRealVar  jpsiN(		"jpsiN",		"jpsiN",	   9.,     0.1,  1.e2);
 			// RooRealVar  psiN(		"psiN",			"psiN",		   9.,     0.1,  1.e2);
@@ -864,8 +864,8 @@ void fitFullMassAndPt_4Decouple( const double massLow4Fit=2.6, const double mass
 			RooGenericPdf *qedPdf 	= cQEDPdf.GetPdf();
 
 			JpsiPdf cJpsiPdf(	hMass, mMass, massLow4Fit, massHig4Fit	);
-			cJpsiPdf.Init(cbAlpha, cbN, jpsiSigma, jpsiMu);
-			// cJpsiPdf.InitCrystalBallGauss(cbAlpha, cbN, jpsiSigma, sigmaRatio, jpsiMu, gausN);
+			// cJpsiPdf.Init(cbAlpha, cbN, jpsiSigma, jpsiMu);
+			cJpsiPdf.InitCrystalBallGauss(cbAlpha, cbN, jpsiSigma, sigmaRatio, jpsiMu, gausN);
 			// cJpsiPdf.InitDoubleCrystalBall(jpsiN, jpsiMu, jpsiSigma, cbNL, cbAlphaL, cbNR, cbAlphaR);
 			// cJpsiPdf.InitAsymDoubleCrystalBall(jpsiN, jpsiMu, jpsiSigmaL, jpsiSigmaR, cbNL, cbAlphaL, cbNR, cbAlphaR);
 			RooGenericPdf *jpsiPdf 	= cJpsiPdf.GetPdf();
